@@ -1,4 +1,5 @@
 //! Minimal midi file parser to support just enough for reading our BF instructions
+
 const std = @import("std");
 
 pub const MidiError = error{
@@ -8,7 +9,11 @@ pub const MidiError = error{
 };
 
 /// Parse the MIDI pitch events for our earfuck commands!
-pub fn parseEvents(alloc: std.mem.Allocator, path: []const u8, instructions: *std.ArrayList(u8)) !void {
+pub fn parseEvents(
+    alloc: std.mem.Allocator,
+    path: []const u8,
+    instructions: *std.ArrayList(u8),
+) !void {
     const file = try std.fs.cwd().openFile(path, .{});
     defer file.close();
 
@@ -83,7 +88,7 @@ fn pitchToInstruction(pitch: u8) u8 {
         PITCH_LEFT => '<',
         PITCH_RIGHT => '>',
 
-        else => ' ', // ignore notes not included in the earfuck range, allowing extra notes for songs
+        else => ' ', // ignore notes not included in the earfuck range, allowing extra notes for songs :D
     };
 }
 
