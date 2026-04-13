@@ -17,5 +17,7 @@ These are the mappings:
 
 This was chosen pretty randomly while staring at a MIDI keyboard lol
 
+Interpreter and Preprocessor are completely ripped from my [JIT brainfuck compiler](https://github.com/BradenEverson/bf-jit)
+
 ## Known Errors
 This was thrown together in a single morning, the MIDI parsing is very lazy. Currently for whatever reason the first note is ignored, consider this an opportunity to make the first note whatever your heart desires before your program begins <3
