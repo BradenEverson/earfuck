@@ -10,10 +10,10 @@ These are the mappings:
 - `-` : `C4`
 - `<` : `F5`
 - `>` : `G5`
-- `[`: `B2`
+- `[` : `B2`
 - `]` : `C3`
 - `.` : `F4`
-- `,` :`E4`
+- `,` : `E4`
 
 This was chosen pretty randomly while staring at a MIDI keyboard lol
 
