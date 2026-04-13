@@ -1,8 +1,8 @@
 //! Interpreter Runtime
 
 const std = @import("std");
-const Op = @import("../preprocessor.zig").Op;
-const exit_err = @import("../main.zig").exit_err;
+const Op = @import("preprocessor.zig").Op;
+const exit_err = @import("main.zig").exit_err;
 
 pub const InterprettedRuntime = struct {
     commands: []Op,
@@ -19,11 +19,12 @@ pub const InterprettedRuntime = struct {
     }
 
     pub fn run(self: *InterprettedRuntime) void {
-        const stdin = std.io.getStdIn();
-        const reader = stdin.reader();
-
+        std.debug.print("Enter\n", .{});
         while (self.pc < self.commands.len) {
             const op = self.commands[self.pc];
+
+            std.debug.print("{} {any} {}\n", .{ self.pc, op, self.state[self.cursor] });
+
             switch (op.kind) {
                 .inc => {
                     self.state[self.cursor] +%= @intCast(op.extra % 256);
@@ -70,8 +71,10 @@ pub const InterprettedRuntime = struct {
                 },
 
                 .read => {
-                    const byte = reader.readByte() catch exit_err("Reading 1 byte failed");
-                    self.state[self.cursor] = byte;
+                    // TODO
+                    // var buffer: [1]u8 = undefined;
+                    // reader.interface.readSliceAll(&buffer) catch exit_err("Reading 1 byte failed");
+                    // self.state[self.cursor] = buffer[0];
                     self.pc += 1;
                 },
             }

@@ -2,7 +2,6 @@
 
 const std = @import("std");
 
-// TODO: Need to preprocess from MIDI chunk not char
 pub const OpKind = enum {
     inc,
     dec,
@@ -68,13 +67,9 @@ pub const Op = struct {
     }
 };
 
-pub fn preproccess(buf: []const u8, al: *std.ArrayList(Op)) !void {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-    defer arena.deinit();
-    const allocator = arena.allocator();
-
-    var stack = std.ArrayList(u16).init(allocator);
-    defer stack.deinit();
+pub fn preproccess(alloc: std.mem.Allocator, buf: []const u8, al: *std.ArrayList(Op)) !void {
+    var stack = std.ArrayList(u16){};
+    defer stack.deinit(alloc);
 
     var i: u16 = 0;
     while (i < buf.len) {
@@ -93,7 +88,7 @@ pub fn preproccess(buf: []const u8, al: *std.ArrayList(Op)) !void {
                     .extra = count,
                 };
 
-                _ = try al.append(op);
+                _ = try al.append(alloc, op);
             },
             '[', ']' => {
                 const opkind = OpKind.op_from_char(current) orelse unreachable;
@@ -102,7 +97,7 @@ pub fn preproccess(buf: []const u8, al: *std.ArrayList(Op)) !void {
                     .extra = 0x404,
                 };
 
-                _ = try al.append(op);
+                _ = try al.append(alloc, op);
 
                 i += 1;
             },
@@ -119,7 +114,7 @@ pub fn preproccess(buf: []const u8, al: *std.ArrayList(Op)) !void {
     while (i < al.items.len) {
         const op = &al.items[i];
         if (op.kind == .while_start) {
-            _ = try stack.append(i);
+            _ = try stack.append(alloc, i);
         } else if (op.kind == .while_end) {
             const prev = stack.pop() orelse unreachable;
             op.*.extra = prev;
