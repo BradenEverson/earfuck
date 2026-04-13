@@ -25,17 +25,13 @@ pub fn main() void {
         std.process.exit(1);
     }
 
-    std.debug.print("{s}\n", .{instructions.items});
-
     var ops: std.ArrayList(preprocess.Op) = .{};
     defer ops.deinit(alloc);
 
     preprocess.preproccess(alloc, instructions.items[0..instructions.items.len], &ops) catch |err| {
-        std.debug.print("EarFuck Parse Error: {any}\n", .{err});
+        std.debug.print("Earfuck Parse Error: {any}\n", .{err});
         std.process.exit(1);
     };
-
-    std.debug.print("{any}\n", .{ops.items});
 
     var rt = Runtime.new(ops.items[0..ops.items.len]);
     defer rt.deinit();
